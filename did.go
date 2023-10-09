@@ -38,6 +38,10 @@ const (
 	Ethereum Blockchain = "eth"
 	// Polygon is polygon blockchain network
 	Polygon Blockchain = "polygon"
+
+	//xxl 01
+	Uptick Blockchain = "uptick"
+
 	// UnknownChain is used when it's not possible to retrieve blockchain type from identifier
 	UnknownChain Blockchain = "unknown"
 	// NoChain should be used for readonly identity to build readonly flag
@@ -55,8 +59,14 @@ const (
 
 	// Goerli is ethereum goerli test network
 	Goerli NetworkID = "goerli" // goerli
+
+	// xxl 01
+	Origin NetworkID = "origin" // uptick
+
 	// UnknownNetwork is used when it's not possible to retrieve network from identifier
 	UnknownNetwork NetworkID = "unknown"
+
+
 
 	// NoNetwork should be used for readonly identity to build readonly flag
 	NoNetwork NetworkID = ""
@@ -84,6 +94,9 @@ var DIDMethodNetwork = map[DIDMethod]map[DIDNetworkFlag]byte{
 
 		{Blockchain: Ethereum, NetworkID: Main}:   0b00100000 | 0b00000001,
 		{Blockchain: Ethereum, NetworkID: Goerli}: 0b00100000 | 0b00000010,
+
+		{Blockchain: Uptick, NetworkID: Main}:   0b01000000 | 0b00000001,
+		{Blockchain: Uptick, NetworkID: Origin}: 0b01000000 | 0b00000010,
 	},
 	DIDMethodPolygonID: {
 		{Blockchain: NoChain, NetworkID: NoNetwork}: 0b00000000,
@@ -96,15 +109,19 @@ var DIDMethodNetwork = map[DIDMethod]map[DIDNetworkFlag]byte{
 // BuildDIDType builds bytes type from chain and network
 func BuildDIDType(method DIDMethod, blockchain Blockchain, network NetworkID) ([2]byte, error) {
 
+	fmt.Printf("xxl BuildDIDType 01 \n")
 	fb, ok := DIDMethodByte[method]
 	if !ok {
 		return [2]byte{}, ErrDIDMethodNotSupported
 	}
 
+	fmt.Printf("xxl BuildDIDType 02 \n")
 	sb, ok := DIDMethodNetwork[method][DIDNetworkFlag{Blockchain: blockchain, NetworkID: network}]
 	if !ok {
 		return [2]byte{}, ErrNetworkNotSupportedForDID
 	}
+
+	fmt.Printf("xxl BuildDIDType 03 \n")
 	return [2]byte{fb, sb}, nil
 }
 
